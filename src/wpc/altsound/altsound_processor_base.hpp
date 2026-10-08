@@ -54,6 +54,9 @@ public:
 	// command recording flag mutator
 	void recordSoundCmds(const bool rec_sound_cmds);
 
+	// loop points flag mutator
+	void useLoopPoints(const bool use_loop_points_in);
+
 	// initialize processing state
 	virtual void init();
 
@@ -123,6 +126,7 @@ private: // data
 
 	bool rec_snd_cmds = false;
 	bool use_rom_ctrl = true;
+	bool use_loop_points = false;
 	static float global_vol;
 	static float master_vol;
 	unsigned int skip_count;
@@ -158,6 +162,12 @@ inline bool AltsoundProcessorBase::romControlsVol() {
 
 inline void AltsoundProcessorBase::recordSoundCmds(const bool rec_sound_cmds) {
 	rec_snd_cmds = rec_sound_cmds;
+}
+
+// ----------------------------------------------------------------------------
+
+inline void AltsoundProcessorBase::useLoopPoints(const bool use_loop_points_in) {
+	use_loop_points = use_loop_points_in;
 }
 
 // ----------------------------------------------------------------------------

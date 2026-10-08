@@ -42,6 +42,10 @@ void altsound_ma_sound_set_looping(ma_sound* pSound, ma_bool32 loop);
 ma_result altsound_ma_sound_seek_to_pcm_frame(ma_sound* pSound, ma_uint64 frameIndex);
 void altsound_ma_sound_set_end_callback(ma_sound* pSound, ma_sound_end_proc callback, void* pUserData);
 
+// Loop points of a sample file (WAV smpl chunk, or LOOPSTART/LOOPLENGTH tags of FLAC/Ogg), in frames at the file's rate
+ma_bool32 altsound_read_loop_points(const char* pFilePath, ma_uint64* pLoopBeg, ma_uint64* pLoopEnd, ma_uint32* pSampleRate);
+ma_result altsound_ma_decoder_set_loop_point(ma_decoder* pDecoder, ma_uint64 loopBeg, ma_uint64 loopEnd);
+
 #ifdef __cplusplus
 }
 #endif
