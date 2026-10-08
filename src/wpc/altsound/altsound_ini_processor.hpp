@@ -55,6 +55,9 @@ public:
 	// Return parsed skip count value
 	const unsigned int getSkipCount() const;
 
+	// Return parsed duck stacking flag
+	const bool stackDucking() const;
+
 private: // functions
 
 	// helper function to parse behavior variable values
@@ -89,6 +92,7 @@ private: // data
 	bool rom_volume_control = true;
 	std::string altsound_format;
 	unsigned int skip_count = 0;
+	bool stack_ducking = false;
 };
 
 // ----------------------------------------------------------------------------
@@ -116,4 +120,10 @@ inline const bool AltsoundIniProcessor::usingRomVolumeControl() const {
 
 inline const unsigned int AltsoundIniProcessor::getSkipCount() const {
 	return skip_count;
+}
+
+// ----------------------------------------------------------------------------
+
+inline const bool AltsoundIniProcessor::stackDucking() const {
+	return stack_ducking;
 }
