@@ -75,8 +75,11 @@ static READ_HANDLER(ym2203_port_a_r) {
   return cmd;
 }
 
+// The switch returns are active low, as the game CPU reads them (gts1.c port_w); the
+// sound program inverts what it reads (hexagone.bin 00AE, 012C: CPL), so a closed switch
+// is a 1 to it, as for the manual command.
 static READ_HANDLER(ym2203_port_b_r) {
-  return sndlocals.swStrobe ? coreGlobals.swMatrix[sndlocals.swStrobe] : ~sndlocals.manCmd;
+  return sndlocals.swStrobe ? ~coreGlobals.swMatrix[sndlocals.swStrobe] : ~sndlocals.manCmd;
 }
 
 static void tabart_irq(int state) {
