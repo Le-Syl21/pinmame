@@ -96,6 +96,7 @@ typedef struct {
   int force_mono_to_stereo; // bool
   int bsmt2000_lle; // bool: BSMT2000 sound runs the chip's own program (needs bsmt2000.bin) instead of the high level emulation
   int sn76477_mame; // bool: SN76477 sound uses the core ported from current MAME instead of the old one
+  int saa1099_vb; // bool: SAA1099 sound uses Valley Bell's (libvgm) core instead of the MAME derived one
 #ifdef PINMAME_HOST_UART
   char *serial_device;         /* COM or /dev/tty mapped to WPC95 UART */
 #endif

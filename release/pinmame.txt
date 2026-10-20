@@ -278,6 +278,8 @@ PinMAME Specific Command line switches
                          Valley Spectra IV: use the core ported from current MAME instead of the
                          old one; read when a game starts. Experimental: only the Zaccaria 1B1125
                          and Game Plan SSU-1 boards are set up with MAME's values for it)
+  -[no]saa1099_vb       (SAA1099 sound (E.F.O. games): use Valley Bell's (libvgm) core instead of
+                         the MAME derived one; read when a game starts)
 
 Headless and scripted runs
 --------------------------

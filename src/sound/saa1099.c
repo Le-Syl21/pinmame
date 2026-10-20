@@ -76,22 +76,22 @@
 
 #include "../ext/vgm/vgmwrite.h"
 
-#if (HAS_SAA1099_VB)
- #include "saa1099_vb.h"
- #include "saa1099_vb.c"
-#endif
+/* Valley Bell/libvgm's core is always compiled in. With the MAME derived core below
+   (HAS_SAA1099) it is picked at run time by the saa1099_vb option (pmoptions), read when
+   the sound starts; a build with HAS_SAA1099_VB only has no other core to pick. */
+#include "saa1099_vb.h"
+#include "saa1099_vb.c"
 
-#if (HAS_SAA1099 && HAS_SAA1099_VB)
- #error Only pick one SAA1099 core (HAS_SAA1099 or HAS_SAA1099_VB)
+#if (HAS_SAA1099)
+static int saa1099_use_vb;
+#define SAA1099_USE_VB saa1099_use_vb
+#else
+#define SAA1099_USE_VB 1
 #endif
 
 /* The MAME derived core steps at clock/256, Valley Bell/libvgm's at clock/128 - running the
    latter at its own rate makes its step counter exactly 1:1 with the output samples */
-#if (HAS_SAA1099_VB)
-static const int clock_divider = 128;
-#else
-static const int clock_divider = 256;
-#endif
+#define clock_divider (SAA1099_USE_VB ? 128 : 256)
 
 #define LEFT	0x00
 #define RIGHT	0x01
@@ -332,6 +332,10 @@ int saa1099_sh_start(const struct MachineSound *msound)
 	const struct SAA1099_interface *intf = msound->sound_interface;
 	if (intf->numchips > MAX_SAA1099) return 1;
 
+#if (HAS_SAA1099)
+	saa1099_use_vb = pmoptions.saa1099_vb;
+#endif
+
 	/* for each chip allocate one stream */
 	for (i = 0; i < intf->numchips && i < MAX_SAA1099; i++)
 	{
@@ -354,11 +358,14 @@ int saa1099_sh_start(const struct MachineSound *msound)
 			name[j] = buf[j];
 			vol[j] = MIXER(intf->volume[i][j], j ? MIXER_PAN_RIGHT : MIXER_PAN_LEFT);
 		}
-#if (HAS_SAA1099_VB)
-		saa1099vb_init(i, saa->master_clock, sample_rate);
-		saa->stream = stream_init_multi(2, name, vol, sample_rate, i, saa1099vb_update);
-#else
-		saa->stream = stream_init_multi(2, name, vol, sample_rate, i, saa1099_update);
+		if (SAA1099_USE_VB)
+		{
+			saa1099vb_init(i, saa->master_clock, sample_rate);
+			saa->stream = stream_init_multi(2, name, vol, sample_rate, i, saa1099vb_update);
+		}
+#if (HAS_SAA1099)
+		else
+			saa->stream = stream_init_multi(2, name, vol, sample_rate, i, saa1099_update);
 #endif
 
 		saa->vgm_idx = vgm_open(VGMC_SAA1099, saa->master_clock);
@@ -382,13 +389,15 @@ static void saa1099_control_port_w( int chip, int reg, int data )
 	}
 
 	saa->selected_reg = data & 0x1f;
-#if (HAS_SAA1099_VB)
-	/* the VB/libvgm core tracks the selected register itself, and clocks the envelope
-	   generators off this write when they are set to external clocking */
-	stream_update(saa->stream, 0);
-	saa1099vb_write_addr(chip, (UINT8)(data & 0xff));
-#else
-	if (saa->selected_reg == 0x18 || saa->selected_reg == 0x19)
+	if (SAA1099_USE_VB)
+	{
+		/* the VB/libvgm core tracks the selected register itself, and clocks the envelope
+		   generators off this write when they are set to external clocking */
+		stream_update(saa->stream, 0);
+		saa1099vb_write_addr(chip, (UINT8)(data & 0xff));
+	}
+#if (HAS_SAA1099)
+	else if (saa->selected_reg == 0x18 || saa->selected_reg == 0x19)
 	{
 		/* clock the envelope channels */
 		if (saa->env_clock[0])
@@ -413,9 +422,12 @@ static void saa1099_write_port_w( int chip, int offset, int data )
 
 	vgm_write(saa->vgm_idx, 0x00, reg & 0x7F, data);
 
-#if (HAS_SAA1099_VB)
-	saa1099vb_write_data(chip, (UINT8)(data & 0xff));
-#else
+	if (SAA1099_USE_VB)
+	{
+		saa1099vb_write_data(chip, (UINT8)(data & 0xff));
+		return;
+	}
+#if (HAS_SAA1099)
 	switch (reg)
 	{
 	/* channel i amplitude */
@@ -492,7 +504,7 @@ static void saa1099_write_port_w( int chip, int offset, int data )
 			logerror("%04x: (SAA1099 #%d) Unknown operation (reg:%02x, data:%02x)\n",activecpu_get_pc(), chip, reg, data);
 		break;
 	}
-#endif /* HAS_SAA1099_VB */
+#endif /* HAS_SAA1099 */
 }
 
 

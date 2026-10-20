@@ -117,9 +117,10 @@
 #define HAS_YMF262_YMFM 1
 #endif // mingw
 #define HAS_MEA8000    1
-// two SAA1099 cores, pick exactly one: the MAME derived one (MAME timing, libVGM's
-// bipolar mixer), or Valley Bell's, which was written against NewRisingSun's recordings
-// from real hardware. Affects ebalchmb, cobrapb and comeback
+// two SAA1099 cores: the MAME derived one (MAME timing, libVGM's bipolar mixer), and
+// Valley Bell's, which was written against NewRisingSun's recordings from real hardware,
+// always compiled in and picked at run time by the saa1099_vb option (HAS_SAA1099_VB alone
+// builds it without the MAME derived one). Affects ebalchmb, cobrapb and comeback
 #define HAS_SAA1099    1
 //#define HAS_SAA1099_VB 1
 #define HAS_QSOUND     1

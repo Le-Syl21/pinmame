@@ -215,6 +215,7 @@ typedef struct
 	int force_mono_to_stereo; // bool
 	int bsmt2000_lle; // bool
 	int sn76477_mame; // bool
+	int saa1099_vb; // bool
 #endif /* PINMAME */
 
 } options_type;

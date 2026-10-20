@@ -115,6 +115,7 @@ struct rc_option pinmame_opts[] = {
         { "force_stereo", NULL, rc_bool, &pmoptions.force_mono_to_stereo, "0", 0, 0, NULL, "Always force stereo output (e.g. to better support multi channel sound systems)" },
         { "bsmt2000_lle", NULL, rc_bool, &pmoptions.bsmt2000_lle, "0", 0, 0, NULL, "BSMT2000 sound: run the chip's own program (needs bsmt2000.bin, uses more CPU) instead of the high level emulation" },
         { "sn76477_mame", NULL, rc_bool, &pmoptions.sn76477_mame, "0", 0, 0, NULL, "SN76477 sound: use the core ported from current MAME instead of the old one" },
+        { "saa1099_vb", NULL, rc_bool, &pmoptions.saa1099_vb, "0", 0, 0, NULL, "SAA1099 sound: use Valley Bell's (libvgm) core instead of the MAME derived one" },
 #ifdef PINMAME_HOST_UART
         { "serial_device", NULL, rc_string, &pmoptions.serial_device, NULL, 0, 0, NULL, "COM port mapped to WPC UART" },
 #endif

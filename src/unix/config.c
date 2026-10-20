@@ -108,6 +108,7 @@ struct rc_option pinmame_opts[] = {
 	{ "rtc", NULL, rc_use_function, NULL, NULL, 0, 0, config_handle_rtc, "Fix the emulated real-time clock: \"YYYY-MM-DD HH:MM[:SS]\"" },
 	{ "bsmt2000_lle", NULL, rc_bool, &pmoptions.bsmt2000_lle, "0", 0, 0, NULL, "BSMT2000 sound: run the chip's own program (needs bsmt2000.bin, uses more CPU) instead of the high level emulation" },
 	{ "sn76477_mame", NULL, rc_bool, &pmoptions.sn76477_mame, "0", 0, 0, NULL, "SN76477 sound: use the core ported from current MAME instead of the old one" },
+	{ "saa1099_vb", NULL, rc_bool, &pmoptions.saa1099_vb, "0", 0, 0, NULL, "SAA1099 sound: use Valley Bell's (libvgm) core instead of the MAME derived one" },
 #ifdef PROC_SUPPORT
 	{ "alpha_on_dmd",NULL, rc_bool,&pmoptions.alpha_on_dmd, "0",  0, 0, NULL, "Emulate alphanumeric display on DMD" },
 	{ "p-roc",NULL, rc_string,&pmoptions.p_roc, "None",  0, 0, NULL, "YAML Machine description file" },

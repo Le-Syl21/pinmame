@@ -26,8 +26,7 @@
 	into saa1099vb_init(); create/destroy/device_start have no analogue here.
 
 	This is a second, independent implementation of the chip, selectable at
-	compile time via HAS_SAA1099_VB in pinmame.h - see saa1099.c for the
-	dispatch, and 2151intf.c for the same pattern applied to the YM2151.
+	run time via the saa1099_vb option - see saa1099.c for the dispatch.
 
 	Unlike the MAME derived core in saa1099.c, this one was written against
 	NewRisingSun's test cases recorded from real hardware, and passes most of
