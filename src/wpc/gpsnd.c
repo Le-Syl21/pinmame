@@ -44,7 +44,17 @@ static struct SN76477interface  gpSS1_sn76477Int = { 1, { 50 }, /* mixing level 
 static WRITE_HANDLER(gpss1_data_w)
 { // tone frequencies          C    E             A    A low
   static const double voltage[16] = {2.8, 3.3, 0, 0, 0, 4.5, 2.2};
+  // the same tones with MAME's core, after MAME's gp_1.cpp (chimes c, b, a and d)
+  static const double voltage_mame[16] = {0.45, 0.131, 0, 0, 0, 0.07, 2.25};
   data &= 0x0f;
+  if (SN76477_mame_active()) {
+    if (voltage_mame[data] != 0.) {
+      SN76477_set_vco_voltage(0, voltage_mame[data]);
+      SN76477_enable_w(0, 0);
+    } else
+      SN76477_enable_w(0, 1);
+    return;
+  }
   if (voltage[data] != 0.) {
     SN76477_set_vco_voltage(0, voltage[data]);
     SN76477_enable_w(0, 0);
@@ -52,38 +62,6 @@ static WRITE_HANDLER(gpss1_data_w)
     SN76477_set_vco_voltage(0, 1.5);
     SN76477_enable_w(0, 1);
   }
-
-#if 0 // MAME
-	//data8_t m_u14 = data >> 4;
-	//if (m_u14 == 1)
-	{
-		switch (data)
-		{
-		case 0x10: // chime c
-			SN76477_set_vco_voltage(0, 0.45);
-			SN76477_enable_w(0, 0);
-			data = 0x1f;
-			break;
-		case 0x11: // chime b
-			SN76477_set_vco_voltage(0, 0.131);
-			SN76477_enable_w(0, 0);
-			data = 0x1f;
-			break;
-		case 0x15: // chime a
-			SN76477_set_vco_voltage(0, 0.07);
-			SN76477_enable_w(0, 0);
-			data = 0x1f;
-			break;
-		case 0x16: // chime d
-			SN76477_set_vco_voltage(0, 2.25);
-			SN76477_enable_w(0, 0);
-			data = 0x1f;
-			break;
-		default:
-			SN76477_enable_w(0, 1);
-		}
-	}
-#endif
 }
 
 static void gpss1_init(struct sndbrdData *brdData)
@@ -91,7 +69,13 @@ static void gpss1_init(struct sndbrdData *brdData)
   /* MIXER = 0 */
   SN76477_mixer_w(0, 0);
   /* ENVELOPE is constant: pin1 = lo, pin 28 = hi */
-  SN76477_envelope_w(0, 2); // MAME (0, 1) (?!)
+  SN76477_envelope_w(0, 2); // MAME (0, 1), i.e. pin 1 lo and pin 28 hi too
+  if (SN76477_mame_active()) {
+    /* MAME's gp_1.cpp values, which its core expects */
+    SN76477_set_feedback_res(0, RES_K(47)); /* 12 */
+    SN76477_set_vco_voltage(0, 0);          /* 16 */
+    SN76477_set_slf_cap(0, CAP_U(1.0));     /* 21 */
+  }
 }
 
 // SSU-2/3

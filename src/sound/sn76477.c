@@ -27,6 +27,50 @@
 
 #include "driver.h"
 
+/* Two cores live in this file: the old PinMAME one below, and the one ported from
+   current MAME (sn76477_mame.c, included at the end). The sn76477_mame option
+   (pmoptions) picks one when the sound starts; the public SN76477_* functions at the
+   end of this file dispatch to it. Both get their own names here, so that the old
+   core's text stays as it was and the MAME one stays diffable against MAME. */
+#define SN76477_LINE_FUNCS(X) \
+	X(noise_clock_w) X(enable_w) X(mixer_w) X(mixer_a_w) X(mixer_b_w) X(mixer_c_w) \
+	X(envelope_w) X(envelope_1_w) X(envelope_2_w) X(vco_w)
+#define SN76477_VALUE_FUNCS(X) \
+	X(set_noise_res) X(set_filter_res) X(set_filter_cap) X(set_decay_res) \
+	X(set_attack_decay_cap) X(set_attack_res) X(set_amplitude_res) X(set_feedback_res) \
+	X(set_slf_res) X(set_slf_cap) X(set_oneshot_res) X(set_oneshot_cap) \
+	X(set_vco_res) X(set_vco_cap) X(set_pitch_voltage) X(set_vco_voltage)
+
+#define SN76477_enable_w            SN76477_old_enable_w
+#define SN76477_noise_clock_w       SN76477_old_noise_clock_w
+#define SN76477_mixer_w             SN76477_old_mixer_w
+#define SN76477_mixer_a_w           SN76477_old_mixer_a_w
+#define SN76477_mixer_b_w           SN76477_old_mixer_b_w
+#define SN76477_mixer_c_w           SN76477_old_mixer_c_w
+#define SN76477_envelope_w          SN76477_old_envelope_w
+#define SN76477_envelope_1_w        SN76477_old_envelope_1_w
+#define SN76477_envelope_2_w        SN76477_old_envelope_2_w
+#define SN76477_vco_w               SN76477_old_vco_w
+#define SN76477_set_noise_res       SN76477_old_set_noise_res
+#define SN76477_set_filter_res      SN76477_old_set_filter_res
+#define SN76477_set_filter_cap      SN76477_old_set_filter_cap
+#define SN76477_set_decay_res       SN76477_old_set_decay_res
+#define SN76477_set_attack_decay_cap SN76477_old_set_attack_decay_cap
+#define SN76477_set_attack_res      SN76477_old_set_attack_res
+#define SN76477_set_amplitude_res   SN76477_old_set_amplitude_res
+#define SN76477_set_feedback_res    SN76477_old_set_feedback_res
+#define SN76477_set_slf_res         SN76477_old_set_slf_res
+#define SN76477_set_slf_cap         SN76477_old_set_slf_cap
+#define SN76477_set_oneshot_res     SN76477_old_set_oneshot_res
+#define SN76477_set_oneshot_cap     SN76477_old_set_oneshot_cap
+#define SN76477_set_vco_res         SN76477_old_set_vco_res
+#define SN76477_set_vco_cap         SN76477_old_set_vco_cap
+#define SN76477_set_pitch_voltage   SN76477_old_set_pitch_voltage
+#define SN76477_set_vco_voltage     SN76477_old_set_vco_voltage
+#define SN76477_sh_start            SN76477_old_sh_start
+#define SN76477_sh_stop             SN76477_old_sh_stop
+#define SN76477_sh_update           SN76477_old_sh_update
+
 #define VERBOSE 0
 
 #if (VERBOSE >= 0)
@@ -1049,4 +1093,157 @@ void SN76477_sh_update(void)
 	int i;
 	for( i = 0; i < intf->num; i++ )
 		stream_update(sn76477[i]->channel,0);
+}
+
+
+/*****************************************************************************
+  MAME's core (sn76477_mame.c), under its own names
+ *****************************************************************************/
+
+#undef SN76477_enable_w
+#undef SN76477_noise_clock_w
+#undef SN76477_mixer_w
+#undef SN76477_mixer_a_w
+#undef SN76477_mixer_b_w
+#undef SN76477_mixer_c_w
+#undef SN76477_envelope_w
+#undef SN76477_envelope_1_w
+#undef SN76477_envelope_2_w
+#undef SN76477_vco_w
+#undef SN76477_set_noise_res
+#undef SN76477_set_filter_res
+#undef SN76477_set_filter_cap
+#undef SN76477_set_decay_res
+#undef SN76477_set_attack_decay_cap
+#undef SN76477_set_attack_res
+#undef SN76477_set_amplitude_res
+#undef SN76477_set_feedback_res
+#undef SN76477_set_slf_res
+#undef SN76477_set_slf_cap
+#undef SN76477_set_oneshot_res
+#undef SN76477_set_oneshot_cap
+#undef SN76477_set_vco_res
+#undef SN76477_set_vco_cap
+#undef SN76477_set_pitch_voltage
+#undef SN76477_set_vco_voltage
+#undef SN76477_sh_start
+#undef SN76477_sh_stop
+#undef SN76477_sh_update
+
+#define SN76477     SN76477_mame_chip   /* its struct, and its chip array, clash with the old core's */
+#define sn76477     sn76477_mame_chips
+#define SN76477_enable_w               SN76477_mame_enable_w
+#define SN76477_noise_clock_w          SN76477_mame_noise_clock_w
+#define SN76477_mixer_w                SN76477_mame_mixer_w
+#define SN76477_mixer_a_w              SN76477_mame_mixer_a_w
+#define SN76477_mixer_b_w              SN76477_mame_mixer_b_w
+#define SN76477_mixer_c_w              SN76477_mame_mixer_c_w
+#define SN76477_envelope_w             SN76477_mame_envelope_w
+#define SN76477_envelope_1_w           SN76477_mame_envelope_1_w
+#define SN76477_envelope_2_w           SN76477_mame_envelope_2_w
+#define SN76477_vco_w                  SN76477_mame_vco_w
+#define SN76477_set_noise_res          SN76477_mame_set_noise_res
+#define SN76477_set_filter_res         SN76477_mame_set_filter_res
+#define SN76477_set_filter_cap         SN76477_mame_set_filter_cap
+#define SN76477_set_decay_res          SN76477_mame_set_decay_res
+#define SN76477_set_attack_decay_cap   SN76477_mame_set_attack_decay_cap
+#define SN76477_set_attack_res         SN76477_mame_set_attack_res
+#define SN76477_set_amplitude_res      SN76477_mame_set_amplitude_res
+#define SN76477_set_feedback_res       SN76477_mame_set_feedback_res
+#define SN76477_set_slf_res            SN76477_mame_set_slf_res
+#define SN76477_set_slf_cap            SN76477_mame_set_slf_cap
+#define SN76477_set_oneshot_res        SN76477_mame_set_oneshot_res
+#define SN76477_set_oneshot_cap        SN76477_mame_set_oneshot_cap
+#define SN76477_set_vco_res            SN76477_mame_set_vco_res
+#define SN76477_set_vco_cap            SN76477_mame_set_vco_cap
+#define SN76477_set_pitch_voltage      SN76477_mame_set_pitch_voltage
+#define SN76477_set_vco_voltage        SN76477_mame_set_vco_voltage
+#define SN76477_sh_start               SN76477_mame_sh_start
+#define SN76477_sh_stop                SN76477_mame_sh_stop
+#define SN76477_sh_update              SN76477_mame_sh_update
+#include "sn76477_mame.c"
+#undef SN76477
+#undef sn76477
+#undef SN76477_enable_w
+#undef SN76477_noise_clock_w
+#undef SN76477_mixer_w
+#undef SN76477_mixer_a_w
+#undef SN76477_mixer_b_w
+#undef SN76477_mixer_c_w
+#undef SN76477_envelope_w
+#undef SN76477_envelope_1_w
+#undef SN76477_envelope_2_w
+#undef SN76477_vco_w
+#undef SN76477_set_noise_res
+#undef SN76477_set_filter_res
+#undef SN76477_set_filter_cap
+#undef SN76477_set_decay_res
+#undef SN76477_set_attack_decay_cap
+#undef SN76477_set_attack_res
+#undef SN76477_set_amplitude_res
+#undef SN76477_set_feedback_res
+#undef SN76477_set_slf_res
+#undef SN76477_set_slf_cap
+#undef SN76477_set_oneshot_res
+#undef SN76477_set_oneshot_cap
+#undef SN76477_set_vco_res
+#undef SN76477_set_vco_cap
+#undef SN76477_set_pitch_voltage
+#undef SN76477_set_vco_voltage
+#undef SN76477_sh_start
+#undef SN76477_sh_stop
+#undef SN76477_sh_update
+
+/*****************************************************************************
+  The public interface: the core picked by the sn76477_mame option
+ *****************************************************************************/
+
+static int sn76477_use_mame;
+
+/* nonzero when the MAME core runs; valid from the sound start on, so drivers can
+   look at it in their sound board init, which runs later */
+int SN76477_mame_active(void)
+{
+	return sn76477_use_mame;
+}
+
+#define SN76477_DISPATCH_LINE(name) \
+	void SN76477_##name(int chip, UINT32 data) \
+	{ if (sn76477_use_mame) SN76477_mame_##name(chip, data); else SN76477_old_##name(chip, data); }
+#define SN76477_DISPATCH_VALUE(name) \
+	void SN76477_##name(int chip, double data) \
+	{ if (sn76477_use_mame) SN76477_mame_##name(chip, data); else SN76477_old_##name(chip, data); }
+SN76477_LINE_FUNCS(SN76477_DISPATCH_LINE)
+SN76477_VALUE_FUNCS(SN76477_DISPATCH_VALUE)
+
+int SN76477_sh_start(const struct MachineSound *msound)
+{
+	sn76477_use_mame = pmoptions.sn76477_mame;
+	if (sn76477_use_mame)
+	{
+		const struct SN76477interface *mintf = msound->sound_interface;
+		int i;
+		if (SN76477_mame_sh_start(msound))
+			return 1;
+		/* the drivers only write the inputs they wire up and expect the others open,
+		   i.e. high, as the old core starts them (MAME's leaves them all at 0) */
+		for (i = 0; i < mintf->num && i < MAX_SN76477; i++)
+		{
+			SN76477_mame_mixer_w(i, 0x07);
+			SN76477_mame_envelope_w(i, 0x03);
+			SN76477_mame_enable_w(i, 0x01);
+		}
+		return 0;
+	}
+	return SN76477_old_sh_start(msound);
+}
+
+void SN76477_sh_stop(void)
+{
+	if (sn76477_use_mame) SN76477_mame_sh_stop(); else SN76477_old_sh_stop();
+}
+
+void SN76477_sh_update(void)
+{
+	if (sn76477_use_mame) SN76477_mame_sh_update(); else SN76477_old_sh_update();
 }

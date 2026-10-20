@@ -342,6 +342,7 @@ static REG_OPTION regGameOpts[] =
         { "vgmwrite",               RO_BOOL,    &gOpts.vgmwrite,          0, 0},
         { "force_stereo",           RO_BOOL,    &gOpts.force_mono_to_stereo, 0, 0},
         { "bsmt2000_lle",           RO_BOOL,    &gOpts.bsmt2000_lle,      0, 0},
+        { "sn76477_mame",           RO_BOOL,    &gOpts.sn76477_mame,      0, 0},
 #endif /* PINMAME */
 
 };
@@ -825,6 +826,7 @@ BOOL OptionsInit()
         global.vgmwrite          = FALSE;
         global.force_mono_to_stereo = FALSE;
         global.bsmt2000_lle      = FALSE;
+        global.sn76477_mame      = FALSE;
 #endif /* PINMAME */
 
         // game_options[x] is valid if game_variables[i].options_loaded == true

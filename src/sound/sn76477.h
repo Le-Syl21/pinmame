@@ -113,6 +113,8 @@ void SN76477_set_vco_cap(int chip, double data);
 void SN76477_set_pitch_voltage(int chip, double data);
 void SN76477_set_vco_voltage(int chip, double data);
 
+int SN76477_mame_active(void); /* nonzero when the sn76477_mame option picked MAME's core */
+
 int SN76477_sh_start(const struct MachineSound *msound);
 void SN76477_sh_stop(void);
 void SN76477_sh_update(void);

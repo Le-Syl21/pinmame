@@ -133,6 +133,13 @@ static void zac1125_init(struct sndbrdData *brdData) {
   SN76477_mixer_w(0, 0);
   /* ENVELOPE is constant: pin1 = hi, pin 28 = lo */
   SN76477_envelope_w(0, 1);
+  if (SN76477_mame_active()) {
+    /* MAME's zac_1.cpp values, which its core expects */
+    SN76477_set_noise_res(0, RES_K(220));   /* 4 */
+    SN76477_set_filter_res(0, RES_K(4.7));  /* 5 */
+    SN76477_set_feedback_res(0, RES_K(220));/* 12 */
+    SN76477_set_vco_voltage(0, 5.0);        /* 16 */
+  }
   /* fake: pulse the enable line to get rid of the constant noise */
 //  SN76477_enable_w(0, 1);
 //  SN76477_enable_w(0, 0);

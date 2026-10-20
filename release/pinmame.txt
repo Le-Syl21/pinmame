@@ -274,6 +274,10 @@ PinMAME Specific Command line switches
   -[no]bsmt2000_lle     (BSMT2000 sound, i.e. Data East, Sega, Stern Whitestar and Alvin G.:
                          run the chip's own program instead of the high level emulation;
                          needs bsmt2000.bin in bsmt2000.zip in the roms folder, uses more CPU)
+  -[no]sn76477_mame     (SN76477 sound, i.e. Zaccaria 1B1125/1B1146, Game Plan SSU-1 to SSU-4 and
+                         Valley Spectra IV: use the core ported from current MAME instead of the
+                         old one; read when a game starts. Experimental: only the Zaccaria 1B1125
+                         and Game Plan SSU-1 boards are set up with MAME's values for it)
 
 Headless and scripted runs
 --------------------------
