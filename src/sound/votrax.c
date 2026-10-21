@@ -30,7 +30,7 @@ the variable VotraxBaseFrequency, this is defaulted to 8000
 // the printer port 1. Connect the data lines P0-P5 to D1-D6, I0-I1 to D7-D6,
 // ACK to ACK and STROBE to STROBE.
 
-#define VOTRAX_CLOSURE_FIX 0
+#define VOTRAX_CLOSURE_FIX 1
 // 1: closure timing and noise balance after MAME PR #16372 (Tamas Geczy, measured
 // on a real SC-01-A), P, T and K get their release burst back; 0: as before
 
