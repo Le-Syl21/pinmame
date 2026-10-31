@@ -1322,6 +1322,12 @@ PINMAMEAPI void PinmameSetConfig(const PinmameConfig* const p_config)
 	// Enable the AT91 JIT (SAM games via sam.c, DE/Whitestar AT91 sound boards via desound.c;
 	// 1 = default address range). Only effective in builds that compile a JIT in
 	options.at91jit = 1;
+	// BSMT2000 sound boards: run the chip's own program when bsmt2000.bin is found (rom2altsound
+	// wants the real chip); PINMAME_BSMT2000_HLE set to anything but 0 keeps the high level emulation
+	{
+		const char* const hle = getenv("PINMAME_BSMT2000_HLE");
+		pmoptions.bsmt2000_lle = !(hle && *hle && strcmp(hle, "0") != 0);
+	}
 
 	// keeps the paths set with PinmameSetPath()
 	for (int fileType = 0; fileType < PINMAME_FILE_TYPE_COUNT; fileType++)
