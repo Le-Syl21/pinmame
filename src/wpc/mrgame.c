@@ -226,6 +226,12 @@ static MACHINE_STOP(mrgame)
   sndbrd_0_exit();	
 }
 
+// Set when there is no nvram file yet. The ROM then finds a bad CMOS checksum at
+// power up and only reloads its factory defaults if the operator switch CPU SW1-1
+// is read as "off" (hard reset) on that first read; the first read of the switch
+// answers it, as the operator would do on a real machine.
+static int mrgame_hardReset;
+
 //Reads current switch column (really row) - Inverted
 static READ16_HANDLER(col_r) {
 	UINT8 switches;
@@ -246,6 +252,7 @@ Bits 6-7 Opto flipper switches
 */
 static READ16_HANDLER(rsw_ack_r) {
 	int data = core_getDip(0) ^ 0x0f;
+	if (mrgame_hardReset) { data |= 1; mrgame_hardReset = 0; }
 	data |= (locals.acksnd << 4);
 	data |= (locals.ackspk << 5);
 	data |= (coreGlobals.swMatrix[9] << 6);
@@ -389,6 +396,7 @@ static WRITE16_HANDLER(row_w) {
 //NVRAM
 static UINT16 *NVRAM;
 static NVRAM_HANDLER(mrgame_nvram) {
+  if (!read_or_write) { mrgame_hardReset = (file == NULL);}
   core_nvram(file, read_or_write, NVRAM, 0x4000, 0x00);
 #if FIX_CMOSINIT
   if (*NVRAM==0) *NVRAM=0xFFFF;
