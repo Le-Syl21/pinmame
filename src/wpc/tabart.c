@@ -94,7 +94,6 @@ static READ_HANDLER(ym2203_port_a_r) {
 }
 
 static READ_HANDLER(ym2203_port_b_r) {
-  return sndlocals.swStrobe ? coreGlobals.swMatrix[sndlocals.swStrobe] : ~sndlocals.manCmd;
   if (!sndlocals.swStrobe)
     return ~sndlocals.manCmd;
   {
