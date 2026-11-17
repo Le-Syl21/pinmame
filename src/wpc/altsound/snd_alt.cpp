@@ -305,6 +305,7 @@ BOOL alt_sound_init(CmdData* cmds_out)
 	processor->romControlsVol(ini_proc.usingRomVolumeControl());
 	processor->recordSoundCmds(ini_proc.recordSoundCmds());
 	processor->setSkipCount(ini_proc.getSkipCount());
+	processor->useLoopPoints(ini_proc.usingLoopPoints());
 	new_sound_commands = ini_proc.newSoundCommands();
 
 	// perform processor initialization (load samples, etc)
