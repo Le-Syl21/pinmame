@@ -24,7 +24,7 @@ static void tabart_init(struct sndbrdData *brdData) {
   // L'Hexagone takes no command: its sound program reacts to the switches and the chime lines,
   // so those are logged as the sound commands (see below), not the raw writes of the lines.
   if (!sndlocals.subtype)
-    sndbrd_logData(brdData->boardNo, 0);
+    sndbrd_logData(brdData->boardNo, SNDBRD_DATALOG_OFF);
 }
 
 static WRITE_HANDLER(tabart_manCmd_w) {
