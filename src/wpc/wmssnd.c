@@ -8,7 +8,6 @@
 #include "sound/hc55516.h"
 #include "sound/dac.h"
 #include "core.h"
-#include "snd_cmd.h"
 #include "sndbrd.h"
 #include "snd_cmd.h"
 #include "s11.h"
@@ -368,7 +367,7 @@ static void s67s_init(struct sndbrdData *brdData) {
   // World Cup and Disco Fever: the sounds the program plays are logged as they start (see
   // s67s_logSound), not the raw writes of the data lines.
   if (brdData->subType & (16 | 8))
-    sndbrd_logData(brdData->boardNo, 0);
+    sndbrd_logData(brdData->boardNo, SNDBRD_DATALOG_OFF);
   pia_config(S67S_PIA0, PIA_STANDARD_ORDERING, &s67s_pia);
 
   // Note that the speech board games featured a potentiometer on the separate speech board to mix speech and sound (so it could be tweaked by the operator!).
