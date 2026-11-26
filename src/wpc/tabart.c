@@ -113,7 +113,7 @@ static READ_HANDLER(ym2203_port_b_r) {
           snd_cmd_log(0, code);
       }
     }
-    return coreGlobals.swMatrix[sndlocals.swStrobe]; // what the program reads is unchanged
+    return ~sw;
   }
 }
 
